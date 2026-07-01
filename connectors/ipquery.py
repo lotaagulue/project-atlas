@@ -1,8 +1,6 @@
-import ipaddress
-
 import httpx
 
-from connectors.base import CollectResult, register
+from connectors.base import CollectResult, looks_like_ip, register
 from core.models import Asset, Finding
 
 API_URL = "https://api.ipquery.io/{ip}"
@@ -14,9 +12,7 @@ class IPQueryConnector:
     name = "ipquery"
 
     def collect(self, target: str) -> CollectResult:
-        try:
-            ipaddress.ip_address(target)
-        except ValueError:
+        if not looks_like_ip(target):
             return []  # ipquery.io only resolves IPs, not domains
 
         response = httpx.get(API_URL.format(ip=target), params={"format": "json"}, timeout=10)
