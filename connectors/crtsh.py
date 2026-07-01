@@ -1,9 +1,8 @@
-import ipaddress
 import time
 
 import httpx
 
-from connectors.base import CollectResult, register
+from connectors.base import CollectResult, looks_like_domain, register
 from core.models import Asset
 
 CRT_SH_URL = "https://crt.sh/"
@@ -16,8 +15,8 @@ class CrtShConnector:
     name = "crtsh"
 
     def collect(self, target: str) -> CollectResult:
-        if self._is_ip(target):
-            return []  # crt.sh searches domains, not IPs
+        if not looks_like_domain(target):
+            return []  # crt.sh searches domains only
 
         response = self._get_with_retry(target)
         response.raise_for_status()
@@ -55,14 +54,6 @@ class CrtShConnector:
                 f"{response.status_code} from crt.sh", request=response.request, response=response
             )
         raise last_error
-
-    @staticmethod
-    def _is_ip(value: str) -> bool:
-        try:
-            ipaddress.ip_address(value)
-            return True
-        except ValueError:
-            return False
 
 
 register(CrtShConnector())
