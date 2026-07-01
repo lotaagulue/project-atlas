@@ -1,1 +1,11 @@
-from connectors import crtsh, ipquery, kev, nvd, peeringdb, wayback  # noqa: F401  (import registers the connectors)
+from connectors import (  # noqa: F401  (import registers the connectors)
+    abuseipdb,
+    crtsh,
+    ipquery,
+    kev,
+    nvd,
+    otx,
+    peeringdb,
+    virustotal,
+    wayback,
+)
