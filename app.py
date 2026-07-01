@@ -48,13 +48,13 @@ tab_assets, tab_findings = st.tabs(["Assets", "Findings"])
 with tab_assets:
     rows = storage.get_assets()
     if rows:
-        st.dataframe(rows, use_container_width=True)
+        st.dataframe(rows, width="stretch")
     else:
         st.info("No assets yet. Add a target and connectors, then click Refresh now.")
 
 with tab_findings:
     rows = storage.get_findings()
     if rows:
-        st.dataframe(rows, use_container_width=True)
+        st.dataframe(rows, width="stretch")
     else:
         st.info("No findings yet. Add a target and connectors, then click Refresh now.")
