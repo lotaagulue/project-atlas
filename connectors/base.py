@@ -1,3 +1,4 @@
+import ipaddress
 import re
 from typing import Protocol, Union
 
@@ -9,8 +10,14 @@ _DOMAIN_RE = re.compile(r"^(?!-)[a-z0-9-]{1,63}(?<!-)(\.(?!-)[a-z0-9-]{1,63}(?<!
 
 
 def looks_like_domain(target: str) -> bool:
-    """True for plausible hostnames (has a dot, valid label chars) -- used by connectors that only handle domains."""
-    return bool(_DOMAIN_RE.match(target.strip()))
+    """True for plausible hostnames (has a dot, valid label chars, not an IP) -- for connectors that only handle domains."""
+    target = target.strip()
+    try:
+        ipaddress.ip_address(target)
+        return False
+    except ValueError:
+        pass
+    return bool(_DOMAIN_RE.match(target))
 
 
 class Connector(Protocol):
