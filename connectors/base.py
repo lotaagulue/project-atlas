@@ -1,8 +1,16 @@
+import re
 from typing import Protocol, Union
 
 from core.models import Asset, Finding
 
 CollectResult = list[Union[Asset, Finding]]
+
+_DOMAIN_RE = re.compile(r"^(?!-)[a-z0-9-]{1,63}(?<!-)(\.(?!-)[a-z0-9-]{1,63}(?<!-))+$", re.IGNORECASE)
+
+
+def looks_like_domain(target: str) -> bool:
+    """True for plausible hostnames (has a dot, valid label chars) -- used by connectors that only handle domains."""
+    return bool(_DOMAIN_RE.match(target.strip()))
 
 
 class Connector(Protocol):
