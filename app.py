@@ -38,8 +38,10 @@ with st.sidebar:
     st.divider()
     if st.button("Refresh now", type="primary"):
         with st.spinner("Running connectors..."):
-            n_assets, n_findings = ingest.run(targets, storage=storage)
+            n_assets, n_findings, errors = ingest.run(targets, storage=storage)
         st.success(f"Stored {n_assets} assets and {n_findings} findings.")
+        for error in errors:
+            st.warning(error)
 
 tab_assets, tab_findings = st.tabs(["Assets", "Findings"])
 
